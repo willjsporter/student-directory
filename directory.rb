@@ -13,15 +13,25 @@ students_hardcoded = [
 ]
 
 def input_students
-  puts "Please enter the names of the students"
-  puts "To finish, just hit return twice"
+  puts "Please enter the names, cohort, hobbies and birthday of the students"
+  puts "To finish, just hit return twice upon input of final student data"
 
+require 'date'
   students=[]
   stuname=gets.chomp
+    cohort_id=gets.chomp
+    hobbyy=gets.chomp
+    cohort_id="july" if cohort_id==""
+    bday=Date.parse(gets.chomp)
   while stuname !="" do
-    students.push({name: stuname, cohort: :julyBlue})
-    puts "Now we have #{students.length} students"
+    students.push({name: stuname, cohort: cohort_id.intern, hobbies: hobbyy, birthday: bday})
+    puts "Now we have #{students.length} #{students.length==1 ? "student" : "students"}"
     stuname=gets.chomp
+    if stuname!=""
+    cohort_id=gets.chomp
+    hobbyy=gets.chomp
+    bday=Date.parse(gets.chomp)
+    end
   end
   students
 end
@@ -30,18 +40,41 @@ students=input_students
 
 def print_header
  puts "The students of Villains Academy"
- puts "-------------"
+ puts "-------------".center("The students of Villains Academy".length)
 end
 
-def print_names(students)
- students.each do |student|
- puts "#{student[:name]}, (#{student[:cohort]} cohort)"
+=begin
+def print_names(students,first_l)
+ students.each_with_index do |student,i|
+   if student[:name][0]==first_l &&student[:name].length<12
+     puts "#{i+1}. #{ student[:name]}, (#{student[:cohort]} cohort)"
+   end
+  end
+end
+=end
+def cohort_list(students)
+  ary=[]
+  students.each{|a| ary<<students[a][:cohort] }
+  ary
+end
+
+#with a while loop - until would be until ==students.length, otherwise same.
+def print_names(students,cohortname)
+  i=0;
+  while i<students.length do
+   if students[i][:cohort]==cohortname.intern &&students[i][:name].length<12
+     #print out student name, cohort,hobbies and birthday; then center it
+     puts "#{i+1}. #{ students[i][:name]}, (#{students[i][:cohort]} cohort, likes #{students[i][:hobbies]}, born #{students[i][:birthday]})".center(80,'*')
+   end
+   i+=1
   end
 end
 
 def print_footer(students)
-  print "Overall, we have #{students.length} great students"
+  print "Overall, we have #{students.length} great #{students.length==1 ? "student" : "students"}"
 end
 print_header
-print_names(students)
+
+puts "What cohort are they in?"
+print_names(students,gets.chomp)
 print_footer(students)
