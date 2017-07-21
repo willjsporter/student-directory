@@ -19,10 +19,10 @@ def input_students
 require 'date'
   students=[]
   stuname=gets.chomp
-    cohort_id=gets.chomp
-    hobbyy=gets.chomp
+    cohort_id=gets.chop
+    hobbyy=gets.gsub(/\n/, '')
     cohort_id="july" if cohort_id==""
-    bday=Date.parse(gets.chomp)
+    bday=Date.parse(gets.chop)
   while stuname !="" do
     students.push({name: stuname, cohort: cohort_id.intern, hobbies: hobbyy, birthday: bday})
     puts "Now we have #{students.length} #{students.length==1 ? "student" : "students"}"
