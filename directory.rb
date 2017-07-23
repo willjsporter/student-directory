@@ -1,14 +1,13 @@
 @students=[]
 def input_students
-  puts "Please enter the names of the students"
-  puts "To finish, just hit return twice"
+  puts "Please enter the names of the students\nTo finish, just hit return twice"
   # create an empty array
   # get the first name
   name = STDIN.gets.chomp
   # while the name is not empty, repeat this code
   while !name.empty? do
   # add the student hash to the array
-  @students << {name: name, cohort: :november}
+  add_to_stus(name, "November")
   puts "Now we have #{@students.count} students"
   # get another name from the user
   name = STDIN.gets.chomp
@@ -70,21 +69,26 @@ def interactive_menu
   end
 end
 
-
 def save_file
+  ARGV.first.nil? ? filename="students.csv" : filename=ARGV.first
   file=File.open("students.csv","w")
-  @students.each do |a|
-    student_data=[a[:name],a:[:cohort]]
+  @students.each do |student|
+    student_data=[student[:name],student[:cohort]]
     #sep with commas
     csv_value=student_data.join(",")
     #write to file line by line
     file.puts csv_value
   end
   file.close
+  puts "File saved"
+end
+
+def add_to_stus(new_name, cohort_id)
+  @students << {name: new_name, cohort: cohort_id.intern}
 end
 
 def try_load_file
-  arg=ARGV.first
+  arg=ARGV.first 
   #return if arg.nil?
   if arg.nil?
     load_file; puts "No file name specified, loaded students.csv"
@@ -99,7 +103,7 @@ def load_file(arg="students.csv")
   file=File.open(arg,"r")
   file.readlines.each do |line|
     name, cohort= line.chomp.split(",")
-    @students << {name: name, cohort: cohort.intern}
+    cohort ? add_to_stus(name, cohort) : "Blank file"
   end
   file.close
 end
