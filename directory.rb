@@ -79,7 +79,6 @@ def save_file
     #write to file line by line
     file.puts csv_value
   end
-  file.close
   puts "File saved"
 end
 
@@ -88,7 +87,7 @@ def add_to_stus(new_name, cohort_id)
 end
 
 def try_load_file
-  arg=ARGV.first 
+  arg=ARGV.first
   #return if arg.nil?
   if arg.nil?
     load_file; puts "No file name specified, loaded students.csv"
@@ -105,7 +104,6 @@ def load_file(arg="students.csv")
     name, cohort= line.chomp.split(",")
     cohort ? add_to_stus(name, cohort) : "Blank file"
   end
-  file.close
 end
 
 interactive_menu
