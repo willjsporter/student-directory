@@ -4,14 +4,14 @@ def input_students
   puts "To finish, just hit return twice"
   # create an empty array
   # get the first name
-  name = gets .chomp
+  name = STDIN.gets.chomp
   # while the name is not empty, repeat this code
   while !name.empty? do
   # add the student hash to the array
   @students << {name: name, cohort: :november}
   puts "Now we have #{@students.count} students"
   # get another name from the user
-  name = gets.chomp
+  name = STDIN.gets.chomp
   end
   # return the array of students
   @students
@@ -42,6 +42,7 @@ def print_menu
   puts "1. Input the students"
   puts "2. Show the students"
   puts "3. Save the list to students.csv"
+  puts "4. Load the list from students.csv"
   puts "9. Exit"
 end
 
@@ -53,6 +54,8 @@ def process(selection)
       show_students
     when "3"
       save_file
+    when "4"
+      try_load_file
     when "9"
       exit
     else
@@ -63,7 +66,7 @@ end
 def interactive_menu
   loop do
     print_menu
-    process(gets.chomp)
+    process(STDIN.gets.chomp)
   end
 end
 
@@ -76,6 +79,27 @@ def save_file
     csv_value=student_data.join(",")
     #write to file line by line
     file.puts csv_value
+  end
+  file.close
+end
+
+def try_load_file
+  arg=ARGV.first
+  #return if arg.nil?
+  if arg.nil?
+    load_file; puts "No file name specified, loaded students.csv"
+  elsif File.exists?(arg)
+    load_file(arg); puts "#{arg} specified and exists. File loaded"
+  else
+    puts "Filename does not exist. Process terminated."; Exit
+  end
+end
+
+def load_file(arg="students.csv")
+  file=File.open(arg,"r")
+  file.readlines.each do |line|
+    name, cohort= line.chomp.split(",")
+    @students << {name: name, cohort: cohort.intern}
   end
   file.close
 end
