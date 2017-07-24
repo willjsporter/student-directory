@@ -1,3 +1,4 @@
+require "csv"
 @students=[]
 def input_students
   puts "Please enter the names of the students\nTo finish, just hit return twice"
@@ -71,14 +72,16 @@ end
 
 def save_file
   ARGV.first.nil? ? filename="students.csv" : filename=ARGV.first
-  file=File.open("students.csv","w")
-  @students.each do |student|
-    student_data=[student[:name],student[:cohort]]
-    #sep with commas
-    csv_value=student_data.join(",")
-    #write to file line by line
-    file.puts csv_value
+  file=File.open(filename,"w") do |file|
+    @students.each do |student|
+      student_data=[student[:name],student[:cohort]]
+      #sep with commas
+      csv_value=student_data.join(",")
+      #write to file line by line
+      file.puts csv_value
+    end
   end
+
   puts "File saved"
 end
 
@@ -99,9 +102,8 @@ def try_load_file
 end
 
 def load_file(arg="students.csv")
-  file=File.open(arg,"r")
-  file.readlines.each do |line|
-    name, cohort= line.chomp.split(",")
+  CSV.foreach(arg,"r") do |line|
+    name, cohort= line[0], line[1]
     cohort ? add_to_stus(name, cohort) : "Blank file"
   end
 end
